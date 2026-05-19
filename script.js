@@ -7,6 +7,8 @@ let activityLog = [];
 let monitoring = false;
 let monitorInterval = 30;
 let currentEditId = null;
+const WARNING_DAYS = 30; // 30 хоног
+const CHECK_INTERVAL = 60000; // 1 минут
 
 // Local Storage-д өгөгдөл хадгалах функц
 function saveToStorage() {
@@ -25,6 +27,52 @@ function loadFromStorage() {
   
   renderWebsites();
   updateStats();
+}
+
+// 30 хоногийн сэрэмжлүүлэл шалгах
+function checkWarnings() {
+  websites.forEach(website => {
+    if (isWarningNeeded(website)) {
+      if (!website.warningShown) {
+        showWarningAlert(website);
+        website.warningShown = true;
+      }
+    } else {
+      website.warningShown = false;
+    }
+  });
+  renderWebsites();
+}
+
+// 30 хоног шалгалт хэрэгтэй эсэх
+function isWarningNeeded(website) {
+  if (website.cleaned) return false; // Цэвэрлэгээ хийсэн бол алга
+  
+  const dateStr = website.date;
+  const websiteDate = new Date(dateStr);
+  const today = new Date();
+  const diffTime = Math.abs(today - websiteDate);
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  
+  return diffDays > WARNING_DAYS;
+}
+
+// Сэрэмжлүүлэл гарч ирнэ
+function showWarningAlert(website) {
+  const daysSince = calculateDaysSince(website.date);
+  const message = `⚠️ АНХААРАХ!\n\n"${website.name}" сайтыг ${daysSince} хоног цэвэрлэгээ хийгээгүй байна!\n\nБайршил: ${website.location}\nОгноо: ${website.date}\n\nЦэвэрлэгээ хийгээнэ үү!`;
+  
+  // Log-д нэмэх
+  addLog('⚠️ Сэрэмжлүүлэл', `${website.name} - ${daysSince} хоног`);
+}
+
+// Өнөө хүнтэй хоног ялгаа олох
+function calculateDaysSince(dateStr) {
+  const websiteDate = new Date(dateStr);
+  const today = new Date();
+  const diffTime = Math.abs(today - websiteDate);
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  return diffDays;
 }
 
 // Үйл явцын лог нэмэх
@@ -89,6 +137,7 @@ function createWebsite(name, location, date, cleaned, checked, description) {
     checkCount: 0,
     uptime: 100,
     lastCheck: '-',
+    warningShown: false,
     createdAt: new Date().toLocaleString('mn-MN')
   };
   
@@ -96,6 +145,7 @@ function createWebsite(name, location, date, cleaned, checked, description) {
   addLog('Сайт нэмэв', name);
   saveToStorage();
   renderWebsites();
+  checkWarnings();
 }
 
 // Сайт засах функц
@@ -108,9 +158,11 @@ function updateWebsite(id, name, location, date, cleaned, checked, description) 
     website.cleaned = cleaned;
     website.checked = checked;
     website.description = description;
+    website.warningShown = false;
     addLog('Сайт засав', name);
     saveToStorage();
     renderWebsites();
+    checkWarnings();
   }
 }
 
@@ -122,6 +174,7 @@ function deleteWebsite(id) {
     addLog('Сайт хасав', website.name);
     saveToStorage();
     renderWebsites();
+    checkWarnings();
   }
 }
 
@@ -143,38 +196,46 @@ function renderWebsites() {
     return;
   }
   
-  container.innerHTML = filtered.map(w => `
-    <div class="website-card">
-      <div class="website-card-header">
-        <h3 class="website-name">${w.name}</h3>
-        <span class="status-badge status-${w.status}">${getStatusBadge(w.status)}</span>
-      </div>
-      <span class="website-location">📍 ${w.location}</span>
-      <span class="website-date">📅 ${w.date}</span>
-      <span class="website-status-info">✅ Цэвэрлэгээ: ${w.cleaned ? 'Хийсэн' : 'Хийгээгүй'}</span>
-      <span class="website-status-info">🔧 Мотор: ${w.checked ? 'Шалгасан' : 'Шалгаагүй'}</span>
-      <p class="website-description">${w.description}</p>
-      <div class="website-stats">
-        <div class="website-stat">
-          <div style="font-size: 0.8em; color: #999;">Шалгалт</div>
-          <div class="website-stat-value">${w.checkCount}</div>
+  container.innerHTML = filtered.map(w => {
+    const isWarning = isWarningNeeded(w);
+    const warningClass = isWarning ? 'warning' : '';
+    const daysSince = calculateDaysSince(w.date);
+    const alertIcon = isWarning ? '<span class="alert-icon">!</span>' : '';
+    
+    return `
+      <div class="website-card ${warningClass}">
+        <div class="website-card-header">
+          <h3 class="website-name">${alertIcon} ${w.name}</h3>
+          <span class="status-badge status-${w.status}">${getStatusBadge(w.status)}</span>
         </div>
-        <div class="website-stat">
-          <div style="font-size: 0.8em; color: #999;">Ажилласан</div>
-          <div class="website-stat-value">${w.uptime.toFixed(1)}%</div>
+        <span class="website-location">📍 ${w.location}</span>
+        <span class="website-date">📅 ${w.date} (${daysSince} хоног)</span>
+        <span class="website-status-info">✅ Цэвэрлэгээ: ${w.cleaned ? 'Хийсэн' : 'Хийгээгүй'}</span>
+        <span class="website-status-info">🔧 Мотор: ${w.checked ? 'Шалгасан' : 'Шалгаагүй'}</span>
+        ${isWarning ? `<span class="website-status-info" style="color: #f5576c; font-weight: 600;">⚠️ 30 хоног цэвэрлэгээ хийгээгүй!</span>` : ''}
+        <p class="website-description">${w.description}</p>
+        <div class="website-stats">
+          <div class="website-stat">
+            <div style="font-size: 0.8em; color: #999;">Шалгалт</div>
+            <div class="website-stat-value">${w.checkCount}</div>
+          </div>
+          <div class="website-stat">
+            <div style="font-size: 0.8em; color: #999;">Ажилласан</div>
+            <div class="website-stat-value">${w.uptime.toFixed(1)}%</div>
+          </div>
+          <div class="website-stat">
+            <div style="font-size: 0.8em; color: #999;">Сүүлийн</div>
+            <div class="website-stat-value">${w.lastCheck}</div>
+          </div>
         </div>
-        <div class="website-stat">
-          <div style="font-size: 0.8em; color: #999;">Сүүлийн</div>
-          <div class="website-stat-value">${w.lastCheck}</div>
+        <div class="website-actions">
+          <button class="edit-btn" onclick="editWebsite(${w.id})">✏️ Засах</button>
+          <button class="check-btn" onclick="checkWebsite(${w.id})">🔍 Шалгах</button>
+          <button class="delete-btn" onclick="confirmDelete(${w.id})">🗑️ Хасах</button>
         </div>
       </div>
-      <div class="website-actions">
-        <button class="edit-btn" onclick="editWebsite(${w.id})">✏️ Засах</button>
-        <button class="check-btn" onclick="checkWebsite(${w.id})">🔍 Шалгах</button>
-        <button class="delete-btn" onclick="confirmDelete(${w.id})">🗑️ Хасах</button>
-      </div>
-    </div>
-  `).join('');
+    `;
+  }).join('');
 }
 
 // Статусын бадж авах
@@ -312,6 +373,11 @@ setInterval(() => {
   document.getElementById('currentTime').textContent = now.toLocaleTimeString('mn-MN');
 }, 1000);
 
+// 30 хоногийн сэрэмжлүүлэл автоматаар шалгах
+setInterval(() => {
+  checkWarnings();
+}, CHECK_INTERVAL);
+
 // Мониторингийг эхлүүлэх
 document.getElementById('startMonitorBtn').addEventListener('click', () => {
   monitoring = true;
@@ -388,4 +454,5 @@ document.getElementById('confirmModal').addEventListener('click', function(e) {
 // Систем эхлүүлэх
 document.addEventListener('DOMContentLoaded', () => {
   loadFromStorage();
+  checkWarnings();
 });
