@@ -90,7 +90,7 @@
                     <input 
                         type="text" 
                         id="searchInput" 
-                        placeholder="Сайтын нэр буюу URL-ээр хайх..."
+                        placeholder="Сайтын нэр буюу байршилаар хайх..."
                     >
                     <select id="filterStatus">
                         <option value="">Бүгд</option>
@@ -170,11 +170,29 @@
             <form id="websiteForm">
                 <div class="form-group">
                     <label>Сайтын нэр:</label>
-                    <input type="text" id="websiteName" required placeholder="Нэр оруулна уу">
+                    <input type="text" id="websiteName" required placeholder="Сайтын нэр оруулна уу">
                 </div>
                 <div class="form-group">
-                    <label>URL:</label>
-                    <input type="url" id="websiteUrl" required placeholder="https://example.com">
+                    <label>Байршил:</label>
+                    <input type="text" id="websiteLocation" required placeholder="Байршил оруулна уу">
+                </div>
+                <div class="form-group">
+                    <label>Огноо (YYYY-MM-DD):</label>
+                    <input type="date" id="websiteDate" required>
+                </div>
+                <div class="form-group">
+                    <label>Цэвэрлэгээ хийсэн эсэх:</label>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="websiteCleaned" name="cleaned">
+                        <label for="websiteCleaned" class="checkbox-label">Цэвэрлэгээ хийсэн</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Моторын ажиллагааг шалгасан эсэх:</label>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="websiteChecked" name="checked">
+                        <label for="websiteChecked" class="checkbox-label">Мотор шалгалт хийсэн</label>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label>Тайлбар:</label>

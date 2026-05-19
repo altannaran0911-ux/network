@@ -76,11 +76,14 @@ function updateRecentActivity() {
 }
 
 // Сайт үүсгэх функц
-function createWebsite(name, url, description) {
+function createWebsite(name, location, date, cleaned, checked, description) {
   const website = {
     id: Date.now(),
     name: name,
-    url: url,
+    location: location,
+    date: date,
+    cleaned: cleaned,
+    checked: checked,
     description: description,
     status: 'checking',
     checkCount: 0,
@@ -96,11 +99,14 @@ function createWebsite(name, url, description) {
 }
 
 // Сайт засах функц
-function updateWebsite(id, name, url, description) {
+function updateWebsite(id, name, location, date, cleaned, checked, description) {
   const website = websites.find(w => w.id === id);
   if (website) {
     website.name = name;
-    website.url = url;
+    website.location = location;
+    website.date = date;
+    website.cleaned = cleaned;
+    website.checked = checked;
     website.description = description;
     addLog('Сайт засав', name);
     saveToStorage();
@@ -127,7 +133,7 @@ function renderWebsites() {
   
   let filtered = websites.filter(w => {
     const matchSearch = w.name.toLowerCase().includes(searchText) || 
-                       w.url.toLowerCase().includes(searchText);
+                       w.location.toLowerCase().includes(searchText);
     const matchFilter = filterStatus === '' || w.status === filterStatus;
     return matchSearch && matchFilter;
   });
@@ -143,7 +149,10 @@ function renderWebsites() {
         <h3 class="website-name">${w.name}</h3>
         <span class="status-badge status-${w.status}">${getStatusBadge(w.status)}</span>
       </div>
-      <a href="${w.url}" class="website-url" target="_blank">🔗 ${w.url}</a>
+      <span class="website-location">📍 ${w.location}</span>
+      <span class="website-date">📅 ${w.date}</span>
+      <span class="website-status-info">✅ Цэвэрлэгээ: ${w.cleaned ? 'Хийсэн' : 'Хийгээгүй'}</span>
+      <span class="website-status-info">🔧 Мотор: ${w.checked ? 'Шалгасан' : 'Шалгаагүй'}</span>
       <p class="website-description">${w.description}</p>
       <div class="website-stats">
         <div class="website-stat">
@@ -208,7 +217,10 @@ function editWebsite(id) {
   
   document.getElementById('modalTitle').textContent = 'Сайтыг засах';
   document.getElementById('websiteName').value = website.name;
-  document.getElementById('websiteUrl').value = website.url;
+  document.getElementById('websiteLocation').value = website.location;
+  document.getElementById('websiteDate').value = website.date;
+  document.getElementById('websiteCleaned').checked = website.cleaned;
+  document.getElementById('websiteChecked').checked = website.checked;
   document.getElementById('websiteDescription').value = website.description;
   
   document.getElementById('websiteModal').classList.add('show');
@@ -247,19 +259,22 @@ document.getElementById('websiteForm').addEventListener('submit', function(e) {
   e.preventDefault();
   
   const name = document.getElementById('websiteName').value.trim();
-  const url = document.getElementById('websiteUrl').value.trim();
+  const location = document.getElementById('websiteLocation').value.trim();
+  const date = document.getElementById('websiteDate').value.trim();
+  const cleaned = document.getElementById('websiteCleaned').checked;
+  const checked = document.getElementById('websiteChecked').checked;
   const description = document.getElementById('websiteDescription').value.trim();
   
-  if (!name || !url) {
-    alert('Нэр болон URL оруулна уу!');
+  if (!name || !location || !date) {
+    alert('Сайтын нэр, байршил, огноог оруулна уу!');
     return;
   }
   
   if (currentEditId) {
-    updateWebsite(currentEditId, name, url, description);
+    updateWebsite(currentEditId, name, location, date, cleaned, checked, description);
     currentEditId = null;
   } else {
-    createWebsite(name, url, description);
+    createWebsite(name, location, date, cleaned, checked, description);
   }
   
   document.getElementById('websiteModal').classList.remove('show');
