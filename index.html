@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сүлжээний сайтуудыг хянах самбар</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>🛡️ Админ</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-link active" data-tab="dashboard">📊 Нүүр хуудас</a>
+                <a href="#" class="nav-link" data-tab="websites">🌐 Сайтууд</a>
+                <a href="#" class="nav-link" data-tab="monitor">📡 Хянаж байна</a>
+                <a href="#" class="nav-link" data-tab="analytics">📈 Хянах самбар</a>
+                <a href="#" class="nav-link" data-tab="settings">⚙️ Тохиргоо</a>
+            </nav>
+            <div class="sidebar-footer">
+                <button class="logout-btn">🚪 Гарах</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Admin Header -->
+            <header class="admin-header">
+                <h1>Сайтуудыг хянах самбар</h1>
+                <div class="header-right">
+                    <div class="user-info">👤 Админ: <strong>Hades9179</strong></div>
+                    <div class="current-time" id="currentTime"></div>
+                </div>
+            </header>
+
+            <!-- Dashboard Tab -->
+            <section class="tab-content active" id="dashboard">
+                <h2>📊 Үндсэн мэдээлэл</h2>
+                
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-icon">🌐</div>
+                        <div class="stat-info">
+                            <h3>Нийт сайтууд</h3>
+                            <div class="stat-number" id="totalWebsites">0</div>
+                        </div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-info">
+                            <h3>Идэвхтэй</h3>
+                            <div class="stat-number" id="activeWebsites">0</div>
+                        </div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-icon">⚠️</div>
+                        <div class="stat-info">
+                            <h3>Анхаарах</h3>
+                            <div class="stat-number" id="warningWebsites">0</div>
+                        </div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-icon">❌</div>
+                        <div class="stat-info">
+                            <h3>Идэвхгүй</h3>
+                            <div class="stat-number" id="inactiveWebsites">0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 30px;">
+                    <h3 style="color: #1e3c72; margin-bottom: 15px;">🔄 Сүүлийн үйлдэл</h3>
+                    <div id="recentActivity" style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                        <p style="color: #999;">Үйлдэл байхгүй</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Websites Tab -->
+            <section class="tab-content" id="websites">
+                <div class="section-header">
+                    <h2>🌐 Сайтуудыг Удирдах</h2>
+                    <button class="btn btn-primary" id="addWebsiteBtn">+ Сайт нэмэх</button>
+                </div>
+
+                <div class="search-filter">
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        placeholder="Сайтын нэр буюу URL-ээр хайх..."
+                    >
+                    <select id="filterStatus">
+                        <option value="">Бүгд</option>
+                        <option value="online">✅ Идэвхтэй</option>
+                        <option value="offline">❌ Идэвхгүй</option>
+                        <option value="warning">⚠️ Анхаарах</option>
+                    </select>
+                </div>
+
+                <div class="websites-list" id="websitesList">
+                    <div style="grid-column: 1/-1; text-align: center; padding: 50px; color: #999;">
+                        <p style="font-size: 1.2em;">📭 Сайт байхгүй байна</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Monitor Tab -->
+            <section class="tab-content" id="monitor">
+                <h2>📡 Сүлжээний хяналт</h2>
+                
+                <div class="monitor-container">
+                    <div class="monitor-controls">
+                        <button class="btn btn-primary" id="startMonitorBtn">▶️ Хяналт эхлүүлэх</button>
+                        <button class="btn btn-danger" id="stopMonitorBtn" style="display: none;">⏹️ Зогсоох</button>
+                        <button class="btn btn-secondary" id="clearLogBtn">🗑️ Лог цэвэрлэх</button>
+                        <div class="monitor-status" id="monitorStatus">🔴 Идэвхгүй</div>
+                    </div>
+                    <div class="monitor-log" id="monitorLog">
+                        <div class="log-entry log-warning">[00:00:00] Хяналтын систем бэлэн байна</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Analytics Tab -->
+            <section class="tab-content" id="analytics">
+                <h2>📈 Шинжилгээ</h2>
+                
+                <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <h3 style="color: #1e3c72; margin-bottom: 15px;">📊 Сайтуудын ажилласан цаг</h3>
+                    <div id="analyticsContent" style="color: #666;">
+                        <p>Сайтууд бүртгүүлсэн мэдээлэл байхгүй</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings Tab -->
+            <section class="tab-content" id="settings">
+                <h2>⚙️ Тохиргоо</h2>
+                
+                <div class="settings-form">
+                    <div class="form-group">
+                        <label>Хяналтын интервал (сек):</label>
+                        <input type="number" id="monitorInterval" value="30" min="10" max="300">
+                    </div>
+                    <div class="form-group">
+                        <label>Уведомлений URL:</label>
+                        <input type="text" id="notificationUrl" placeholder="https://...">
+                    </div>
+                    <div class="form-group">
+                        <label>Админын имэйл:</label>
+                        <input type="email" id="adminEmail" placeholder="admin@example.com">
+                    </div>
+                    <div class="form-actions">
+                        <button class="btn btn-success" id="saveSettingsBtn">💾 Хадгалах</button>
+                        <button class="btn btn-secondary" id="resetSettingsBtn">↺ Шинээр эхлүүлэх</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Add/Edit Website Modal -->
+    <div class="modal" id="websiteModal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <h2 id="modalTitle">Сайт нэмэх</h2>
+            <form id="websiteForm">
+                <div class="form-group">
+                    <label>Сайтын нэр:</label>
+                    <input type="text" id="websiteName" required placeholder="Нэр оруулна уу">
+                </div>
+                <div class="form-group">
+                    <label>URL:</label>
+                    <input type="url" id="websiteUrl" required placeholder="https://example.com">
+                </div>
+                <div class="form-group">
+                    <label>Тайлбар:</label>
+                    <textarea id="websiteDescription" placeholder="Сайтны тайлбар" rows="3"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-success">✅ Хадгалах</button>
+                    <button type="button" class="btn btn-secondary" id="cancelBtn">❌ Цуцлах</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div class="alert-modal" id="confirmModal">
+        <div class="alert-box">
+            <h3 id="confirmTitle">Баталгаажуулах</h3>
+            <p id="confirmMessage"></p>
+            <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
+                <button class="btn btn-success" id="confirmYes">✅ Тийм</button>
+                <button class="btn btn-secondary" id="confirmNo">❌ Үгүй</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
