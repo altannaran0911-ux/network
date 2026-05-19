@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Сүлжээний сайтуудыг хянах самбар</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="admin-container">
@@ -38,43 +38,56 @@
 
             <!-- Dashboard Tab -->
             <section class="tab-content active" id="dashboard">
-                <h2>📊 Үндсэн мэдээлэл</h2>
-                
-                <div class="stats-grid">
-                    <div class="stat-box">
-                        <div class="stat-icon">🌐</div>
-                        <div class="stat-info">
-                            <h3>Нийт сайтууд</h3>
-                            <div class="stat-number" id="totalWebsites">0</div>
+                <div class="dashboard-container">
+                    <h2>📊 Үндсэн мэдээлэл</h2>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-box">
+                            <div class="stat-icon">🌐</div>
+                            <div class="stat-info">
+                                <h3>Нийт сайтууд</h3>
+                                <div class="stat-number" id="totalWebsites">0</div>
+                            </div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-icon">✅</div>
+                            <div class="stat-info">
+                                <h3>Идэвхтэй</h3>
+                                <div class="stat-number" id="activeWebsites">0</div>
+                            </div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-icon">⚠️</div>
+                            <div class="stat-info">
+                                <h3>Анхаарах</h3>
+                                <div class="stat-number" id="warningWebsites">0</div>
+                            </div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-icon">❌</div>
+                            <div class="stat-info">
+                                <h3>Идэвхгүй</h3>
+                                <div class="stat-number" id="inactiveWebsites">0</div>
+                            </div>
                         </div>
                     </div>
-                    <div class="stat-box">
-                        <div class="stat-icon">✅</div>
-                        <div class="stat-info">
-                            <h3>Идэвхтэй</h3>
-                            <div class="stat-number" id="activeWebsites">0</div>
-                        </div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-icon">⚠️</div>
-                        <div class="stat-info">
-                            <h3>Анхаарах</h3>
-                            <div class="stat-number" id="warningWebsites">0</div>
-                        </div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-icon">❌</div>
-                        <div class="stat-info">
-                            <h3>Идэвхгүй</h3>
-                            <div class="stat-number" id="inactiveWebsites">0</div>
-                        </div>
-                    </div>
-                </div>
 
-                <div style="margin-top: 30px;">
-                    <h3 style="color: #1e3c72; margin-bottom: 15px;">🔄 Сүүлийн үйлдэл</h3>
-                    <div id="recentActivity" style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                        <p style="color: #999;">Үйлдэл байхгүй</p>
+                    <div class="dashboard-content">
+                        <div class="dashboard-section">
+                            <h3>🔄 Сүүлийн үйлдлүүд</h3>
+                            <div id="recentActivity" class="activity-list">
+                                <p style="color: #999;">Үйлдэл байхгүй</p>
+                            </div>
+                        </div>
+                        
+                        <div class="dashboard-section">
+                            <h3>⚡ Хурдан холбоос</h3>
+                            <div class="quick-actions">
+                                <button class="quick-btn" id="quickAddWebsite">➕ Сайт нэмэх</button>
+                                <button class="quick-btn" id="quickCheckAll">🔍 Бүгдийг шалгах</button>
+                                <button class="quick-btn" id="quickOpenWebsites">🌐 Сайтруу орох</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -128,8 +141,8 @@
             <section class="tab-content" id="analytics">
                 <h2>📈 Шинжилгээ</h2>
                 
-                <div style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                    <h3 style="color: #1e3c72; margin-bottom: 15px;">📊 Сайтуудын ажилласан цаг</h3>
+                <div style="background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); border-top: 4px solid #667eea;">
+                    <h3 style="color: #667eea; margin-bottom: 15px;">📊 Сайтуудын ажилласан цаг</h3>
                     <div id="analyticsContent" style="color: #666;">
                         <p>Сайтууд бүртгүүлсэн мэдээлэл байхгүй</p>
                     </div>
@@ -218,6 +231,6 @@
         </div>
     </div>
 
-    <script src="js/script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>

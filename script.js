@@ -29,7 +29,7 @@ function loadFromStorage() {
   updateStats();
 }
 
-// 30 хоногийн сэрэмжлүүлэл шалгах
+// 30 хоногийн сэрэмжлүүл шалгах
 function checkWarnings() {
   websites.forEach(website => {
     if (isWarningNeeded(website)) {
@@ -57,16 +57,16 @@ function isWarningNeeded(website) {
   return diffDays > WARNING_DAYS;
 }
 
-// Сэрэмжлүүлэл гарч ирнэ
+// Сэрэмжлүүл гарч ирнэ
 function showWarningAlert(website) {
   const daysSince = calculateDaysSince(website.date);
-  const message = `⚠️ АНХААРАХ!\n\n"${website.name}" сайтыг ${daysSince} хоног цэвэрлэгээ хийгээгүй байна!\n\nБайршил: ${website.location}\nОгноо: ${website.date}\n\nЦэвэрлэгээ хийгээнэ үү!`;
+  const message = `⚠️ АНХААРАХ!\n\n"${website.name}" сайтыг ${daysSince} хоног цэвэрлэгээ хийгээгүй байна!\n\nБайршил: ${website.location}\nОгноо: ${website.date}\n\nЦэвэрлэгээ хийгээнэ үүй!`;
   
   // Log-д нэмэх
-  addLog('⚠️ Сэрэмжлүүлэл', `${website.name} - ${daysSince} хоног`);
+  addLog('⚠️ Сэрэмжлүүл', `${website.name} - ${daysSince} хоног`);
 }
 
-// Өнөө хүнтэй хоног ялгаа олох
+// Өнгө хүнтэй хоног ялгаа олох
 function calculateDaysSince(dateStr) {
   const websiteDate = new Date(dateStr);
   const today = new Date();
@@ -75,7 +75,7 @@ function calculateDaysSince(dateStr) {
   return diffDays;
 }
 
-// Үйл явцын лог нэмэх
+// Үйл ябцын лог нэмэх
 function addLog(action, details = '') {
   const now = new Date();
   const time = now.toLocaleTimeString('mn-MN');
@@ -271,7 +271,7 @@ function checkWebsite(id) {
   }, 1000 + Math.random() * 2000);
 }
 
-// Сайтыг засахын тулд нээх
+// Сайтыг засахын туул нээх
 function editWebsite(id) {
   currentEditId = id;
   const website = websites.find(w => w.id === id);
@@ -350,6 +350,21 @@ document.getElementById('addWebsiteBtn').addEventListener('click', () => {
   document.getElementById('websiteModal').classList.add('show');
 });
 
+// Хурдан үйлдлүүдийн сонсогчид
+document.getElementById('quickAddWebsite').addEventListener('click', () => {
+  document.getElementById('addWebsiteBtn').click();
+});
+
+document.getElementById('quickCheckAll').addEventListener('click', () => {
+  websites.forEach(website => {
+    checkWebsite(website.id);
+  });
+});
+
+document.getElementById('quickOpenWebsites').addEventListener('click', () => {
+  document.querySelectorAll('.nav-link')[1].click();
+});
+
 // Modal хаах
 document.getElementById('closeModal').addEventListener('click', () => {
   document.getElementById('websiteModal').classList.remove('show');
@@ -373,7 +388,7 @@ setInterval(() => {
   document.getElementById('currentTime').textContent = now.toLocaleTimeString('mn-MN');
 }, 1000);
 
-// 30 хоногийн сэрэмжлүүлэл автоматаар шалгах
+// 30 хоногийн сэрэмжлүүл автоматаар шалгах
 setInterval(() => {
   checkWarnings();
 }, CHECK_INTERVAL);
@@ -398,7 +413,7 @@ document.getElementById('stopMonitorBtn').addEventListener('click', () => {
   document.getElementById('monitorStatus').textContent = '🔴 Идэвхгүй';
   document.getElementById('monitorStatus').classList.remove('running');
   
-  addLog('Мониторинг зогсоов');
+  addLog('Мониторинг зогслоо');
 });
 
 // Мониторингийн үндсэн давталт
@@ -428,7 +443,7 @@ document.getElementById('saveSettingsBtn').addEventListener('click', () => {
 document.getElementById('resetSettingsBtn').addEventListener('click', () => {
   document.getElementById('monitorInterval').value = 30;
   monitorInterval = 30;
-  alert('↺ Тохиргоо эргүүлэгдлээ!');
+  alert('↺ Тохиргоо эргүүллэгдлээ!');
 });
 
 // Гарах товчны сонсогч
@@ -438,7 +453,7 @@ document.querySelector('.logout-btn').addEventListener('click', () => {
   }
 });
 
-// Modal эконо нээлээ
+// Modal экон нээлээ
 document.getElementById('websiteModal').addEventListener('click', function(e) {
   if (e.target === this) {
     this.classList.remove('show');
